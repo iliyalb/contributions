@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void create_script_file(char *os_type, char *script_file_name, char *script_file_contents)
+void create_bat_file(char *script_file_name, char *script_file_contents)
 {
     FILE *fp = fopen(script_file_name, "w");
     if (fp == NULL)
@@ -13,34 +13,27 @@ void create_script_file(char *os_type, char *script_file_name, char *script_file
     }
 
     fprintf(fp, "%s\n", script_file_contents);
-    fprintf(fp, "git push\n");
+
+    fclose(fp);
+}
+
+void create_sh_file(char *script_file_name, char *script_file_contents)
+{
+    FILE *fp = fopen(script_file_name, "w");
+    if (fp == NULL)
+    {
+        perror("fopen");
+        exit(1);
+    }
+
+    fprintf(fp, "#!/bin/bash\n");
+    fprintf(fp, "%s\n", script_file_contents);
 
     fclose(fp);
 }
 
 int main()
 {
-    // Detect type of OS
-    char *os_type = getenv("OSTYPE");
-    char *script_file_name = NULL;
-    char *script_file_contents = NULL;
-
-    if (strcmp(os_type, "Windows_NT") == 0)
-    {
-        script_file_name = "script.bat";
-        script_file_contents = "git commit -m \"Update README.md\"";
-    }
-    else if (strcmp(os_type, "Linux") == 0 || strcmp(os_type, "Darwin") == 0)
-    {
-        script_file_name = "script.sh";
-        script_file_contents = "#!/bin/bash\ngit commit -m \"Update README.md\"\ngit push";
-    }
-    else
-    {
-        fprintf(stderr, "Unsupported OS type: %s\n", os_type);
-        exit(1);
-    }
-
     // Get the current date and time.
     time_t now = time(NULL);
     struct tm *tm_info = localtime(&now);
@@ -61,7 +54,9 @@ int main()
     fclose(fp);
 
     // Create a bat or sh script
-    create_script_file(os_type, script_file_name, script_file_contents);
+    char *script_file_contents = "git commit -m \"Update README.md\" && git push";
+    create_bat_file("script.bat", script_file_contents);
+    create_sh_file("script.sh", script_file_contents);
 
     return 0;
 }
