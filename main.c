@@ -54,7 +54,7 @@ int main()
     fclose(fp);
 
     // Create a bat or sh script
-    char *script_file_contents = "git commit -m \"Update README.md\" && git push";
+    char *script_file_contents = "git commit -am \"Update README.md\" && git push";
     create_bat_file("script.bat", script_file_contents);
     create_sh_file("script.sh", script_file_contents);
 
