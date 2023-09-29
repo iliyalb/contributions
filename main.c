@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <time.h>
+#include <stdlib.h>
 
 void create_script_file(char *os_type, char *script_file_name, char *script_file_contents)
 {
